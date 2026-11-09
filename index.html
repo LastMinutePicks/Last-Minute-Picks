@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last Minute Picks - Data-Driven Sports Betting Analytics</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151f32;
+            --accent-green: #00e676;
+            --accent-gold: #ffb300;
+            --text-main: #ffffff;
+            --text-muted: #8a99ad;
+            --border-color: #24344d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-content: border-box;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--accent-green);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-main);
+        }
+
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            color: var(--accent-gold);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--accent-green);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 230, 118, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .pick-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pick-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--accent-green);
+        }
+
+        .pick-card.lock::before {
+            background-color: var(--accent-gold);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .matchup {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .pick-selection {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed var(--border-color);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selection-team {
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+        
+        .pick-card.lock .selection-team {
+            color: var(--accent-gold);
+        }
+
+        .odds {
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .analysis {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .lock-tag {
+            background: rgba(255, 179, 0, 0.1);
+            color: var(--accent-gold);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .tracker-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 4rem;
+        }
+
+        .tracker-table th, .tracker-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tracker-table th {
+            background-color: rgba(255,255,255,0.02);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-win {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .disclaimer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">LASTMINUTE<span>PICKS</span></a>
+        <nav>
+            <a href="#" class="active">Today's Picks</a>
+            <a href="#">Track Record</a>
+            <a href="#">Insights</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <span class="badge">🔥 Act Fast: Lines are Moving</span>
+        <h1>Beat the Closing Line with <span>Last Minute Picks</span></h1>
+        <p>Data-driven, situational sports analytics generated right before lock to exploit final public consensus inefficiencies.</p>
+    </section>
+
+    <main class="container">
+        <h2 class="section-title">⚡ Active Board</h2>
+        <div class="grid">
+            <!-- Card 1 -->
+            <div class="pick-card lock">
+                <div class="card-header">
+                    <span>NFL • Week 10</span>
+                    <span class="lock-tag">🔒 MAX LOCK</span>
+                </div>
+                <div class="matchup">Buffalo vs Miami</div>
+                <p class="analysis">Heavy late-sharp action hitting the underdogs after line inflation. Value locked at maximum spread value.</p>
+                <div class="pick-selection">
+                    <span>Pick: <span class="selection-team">Miami +4.5</span></span>
+                    <span class="odds">-110</span>
+                </div>
+                <div class="card-footer">
+                    <span>Released: 12 mins ago</span>
+                    <span>Confidence: 78%</span>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="pick-card">
+                <div class="card-header">
+                    <span>NBA • Regular Season</span>
+                    <span>Standard Pick</span>
+                </div>
+                <div class="matchup">L.A. Lakers vs Boston</div>
+                <p class="analysis">Starting center ruled out late during warmups. Backcourt expected to carry increased usage rate.</p>
+                <div class="pick-selection">
+                    <span>Pick: <span class="selection-team">Over 224.5 Points</span></span>
+                    <span class="odds">-105</span>
+                </div>
+                <div class="card-footer">
+                    <span>Released: 5 mins ago</span>
+                    <span>Confidence: 64%</span>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="pick-card">
+                <div class="card-header">
+                    <span>English Premier League</span>
+                    <span>Value Play</span>
+                </div>
+                <div class="matchup">Arsenal vs Chelsea</div>
+                <p class="analysis">Weather forecast shifting to heavy rain at kickoff. Tactical adjustment favors structural defensive under.</p>
+                <div class="pick-selection">
+                    <span>Pick: <span class="selection-team">Under 2.5 Goals</span></span>
+                    <span class="odds">+110</span>
+                </div>
+                <div class="card-footer">
+                    <span>Released: 22 mins ago</span>
+                    <span>Confidence: 61%</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">📊 Recent Verification (Last 7 Days)</h2>
+        <table class="tracker-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Matchup</th>
+                    <th>Selection</th>
+                    <th>Odds</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Nov 8</td>
+                    <td>Kansas City vs Denver</td>
+                    <td>Kansas City -7.5</td>
+                    <td>-110</td>
+                    <td class="status-win">WIN</td>
+                </tr>
+                <tr>
+                    <td>Nov 7</td>
+                    <td>Golden State vs Cleveland</td>
+                    <td>Golden State ML</td>
+                    <td>+130</td>
+                    <td class="status-win">WIN</td>
+                </tr>
+                <tr>
+                    <td>Nov 5</td>
+                    <td>Philadelphia vs Dallas</td>
+                    <td>Under 47.5</td>
+                    <td>-105</td>
+                    <td class="status-win">WIN</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <footer class="disclaimer">
+            <p><strong>lastminutepicks.org</strong> is a content platform intended solely for entertainment, informational, and analytical purposes. We do not accept bets or host gambling. Past performance does not guarantee future success. Please bet responsibly. Gambling problem? Call 1-800-GAMBLER.</p>
+        </footer>
+    </main>
+
+</body>
+</html>
